@@ -1,0 +1,5 @@
+../data/config.json
+*wallet.json
+node_modules
+target
+.DS_Store
