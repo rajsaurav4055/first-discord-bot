@@ -1,4 +1,4 @@
-../data/config.json
+data/config.json
 *wallet.json
 node_modules
 target
