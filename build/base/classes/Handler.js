@@ -59,5 +59,20 @@ class Handler {
             }));
         });
     }
+    LoadCommands() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const files = (yield (0, glob_1.glob)(`build/commands/**/*.js`)).map(filePath => path_1.default.resolve(filePath));
+            files.map((file) => __awaiter(this, void 0, void 0, function* () {
+                var _a;
+                const command = new (yield Promise.resolve(`${file}`).then(s => __importStar(require(s)))).default(this.client);
+                if (!command.name)
+                    return delete require.cache[require.resolve(file)] && console.log(`${file.split("/").pop()} does not have a name.`);
+                if ((_a = file.split("/").pop()) === null || _a === void 0 ? void 0 : _a.split(".")[2])
+                    return this.client.subcommands.set(command.name, command);
+                this.client.commands.set(command.name, command);
+                return delete require.cache[require.resolve(file)];
+            }));
+        });
+    }
 }
 exports.default = Handler;

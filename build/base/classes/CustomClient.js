@@ -10,6 +10,9 @@ class CustomClient extends discord_js_1.Client {
         super({ intents: [] });
         this.config = require(`${process.cwd()}/data/config.json`);
         this.handler = new Handler_1.default(this);
+        this.commands = new discord_js_1.Collection();
+        this.subcommands = new discord_js_1.Collection();
+        this.cooldowns = new discord_js_1.Collection();
     }
     Init() {
         this.LoadHandlers();
@@ -18,6 +21,7 @@ class CustomClient extends discord_js_1.Client {
     }
     LoadHandlers() {
         this.handler.LoadEvents();
+        this.handler.LoadCommands();
     }
 }
 exports.default = CustomClient;
