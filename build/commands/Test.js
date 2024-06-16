@@ -24,7 +24,8 @@ class Test extends Command_1.default {
                     name: "two",
                     description: "This is the second option",
                     type: discord_js_1.ApplicationCommandOptionType.Subcommand,
-                }]
+                }],
+            dev: false
         });
     }
 }

@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -14,12 +23,25 @@ class Ready extends Event_1.default {
         });
     }
     Execute() {
-        var _a;
-        console.log(`${(_a = this.client.user) === null || _a === void 0 ? void 0 : _a.tag} is now ready!`);
-        const commands = this.GetJson(this.client.commands);
-        const rest = new discord_js_1.REST().setToken(this.client.config.token);
-        const setCommands = rest.put(discord_js_1.Routes.applicationGuildCommands(this.client.config.discordClientId, this.client.config.guildId), { body: commands });
-        console.log(`Successfully set ${setCommands.length} commands!`);
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            console.log(`${(_a = this.client.user) === null || _a === void 0 ? void 0 : _a.tag} is now ready!`);
+            const clientId = this.client.developmentMode ? this.client.config.devDiscordClientId : this.client.config.discordClientId;
+            const rest = new discord_js_1.REST().setToken(this.client.config.token);
+            if (!this.client.developmentMode) {
+                const globalCommands = yield rest.put(discord_js_1.Routes.applicationCommands(clientId), {
+                    body: this.GetJson(this.client.commands.filter(command => !command.dev))
+                });
+                console.log(`Successfully loaded ${globalCommands.length} global application (/) commands`);
+            }
+            const devCommands = yield rest.put(discord_js_1.Routes.applicationGuildCommands(clientId, this.client.config.devGuildId), {
+                body: this.GetJson(this.client.commands.filter(command => command.dev))
+            });
+            console.log(`Successfully loaded ${devCommands.length} developer application (/) commands`);
+            // const commands: object[] = this.GetJson(this.client.commands);
+            // const setCommands: any = await rest.put(Routes.applicationGuildCommands(this.client.config.discordClientId, this.client.config.guildId), {body: commands});
+            // console.log(`Successfully set ${setCommands.length} commands!`);
+        });
     }
     GetJson(commands) {
         const data = [];

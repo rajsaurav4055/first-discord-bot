@@ -21,7 +21,8 @@ export default class Test extends Command{
                 name: "two",
                 description: "This is the second option",
                 type: ApplicationCommandOptionType.Subcommand,
-            }]
+            }],
+            dev: false
         })
     }
 
